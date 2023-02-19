@@ -1,11 +1,12 @@
 import React from "react";
 import { range } from "../../utils";
+import { checkGuess } from "../../game-helpers";
 import { NUM_OF_GUESSES_ALLOWED } from "../../constants";
 
-export const PreviousGuesses = ({ guesses }) => {
+export const PreviousGuesses = ({ guesses, answer }) => {
   const fillerArr = range(guesses.length, NUM_OF_GUESSES_ALLOWED);
-  let currentGuesses = [...guesses, ...fillerArr];
-  currentGuesses = currentGuesses.map((item) => {
+  const currentGuesses = [...guesses, ...fillerArr];
+  const processedGuesses = currentGuesses.map((item) => {
     if (typeof item === "number") {
       return {
         id: Math.random(),
@@ -16,21 +17,21 @@ export const PreviousGuesses = ({ guesses }) => {
     }
     return {
       ...item,
-      guess: item.guess
-        .split("")
-        .map((item) => ({ id: Math.random(), letter: item })),
+      guess: checkGuess(item.guess, answer).map((item) => ({
+        ...item,
+        id: Math.random(),
+      })),
     };
   });
-
-  console.log(currentGuesses);
+  console.log(answer);
 
   return (
     <div className="guess-results">
-      {currentGuesses.map((item) => {
+      {processedGuesses.map((item) => {
         return (
           <p key={item.id} className="guess">
-            {item.guess.map(({ letter, id }) => (
-              <span className="cell" key={id}>
+            {item.guess.map(({ letter, id, status }) => (
+              <span className={`cell ${status}`} key={id}>
                 {letter}
               </span>
             ))}
