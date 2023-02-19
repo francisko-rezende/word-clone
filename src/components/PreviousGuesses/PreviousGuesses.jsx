@@ -3,7 +3,7 @@ import { range } from "../../utils";
 import { checkGuess } from "../../game-helpers";
 import { NUM_OF_GUESSES_ALLOWED } from "../../constants";
 
-export const PreviousGuesses = ({ guesses, answer }) => {
+export const PreviousGuesses = ({ guesses, answer, setGameResult }) => {
   const fillerArr = range(guesses.length, NUM_OF_GUESSES_ALLOWED);
   const currentGuesses = [...guesses, ...fillerArr];
   const processedGuesses = currentGuesses.map((item) => {
@@ -24,6 +24,24 @@ export const PreviousGuesses = ({ guesses, answer }) => {
     };
   });
   console.log(answer);
+  console.log(guesses);
+  console.log(processedGuesses);
+
+  const checkResult = () => {
+    const hasGuessedCorrectly = processedGuesses.some(({ guess }) =>
+      guess.every(({ status }) => status === "correct")
+    );
+
+    if (hasGuessedCorrectly) {
+      setGameResult("won");
+    }
+
+    if (!hasGuessedCorrectly && guesses.length === 6) {
+      setGameResult("lost");
+    }
+  };
+
+  checkResult();
 
   return (
     <div className="guess-results">

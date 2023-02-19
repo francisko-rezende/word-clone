@@ -1,6 +1,6 @@
 import React from "react";
 
-export const GuessForm = ({ handleAddGuess }) => {
+export const GuessForm = ({ handleAddGuess, isGameFinished }) => {
   const [guess, setGuess] = React.useState("");
   return (
     <form
@@ -12,12 +12,14 @@ export const GuessForm = ({ handleAddGuess }) => {
           return;
         }
         handleAddGuess(guess);
+        setGuess("");
       }}
     >
       <label className="guess-input" htmlFor="guess">
         Enter guess:
       </label>
       <input
+        disabled={isGameFinished}
         className="guess-input"
         type="text"
         id="guess"

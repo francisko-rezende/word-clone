@@ -12,15 +12,29 @@ console.info({ answer });
 
 function Game() {
   const [guesses, setGuesses] = React.useState([])
+  const [gameResult, setGameResult] = React.useState('')
+
+  const isGameFinished = ['won', 'lost'].includes(gameResult)
 
   const handleAddGuess = (guess) => {
     const newGuess = { id: Math.random(), guess }
     setGuesses([...guesses, newGuess])
   }
 
+
   return <>
-    <PreviousGuesses guesses={guesses} answer={answer} />
-    <GuessForm handleAddGuess={handleAddGuess} />
+    {gameResult === 'won' && (<div className="happy banner">
+      <p>
+        <strong>Congratulations!</strong> Got it in
+        <strong>3 guesses</strong>.
+      </p>
+    </div>)}
+    {gameResult === 'lost' && (
+      <div className="sad banner">
+        <p>Sorry, the correct answer is <strong>LEARN</strong>.</p>
+      </div>)}
+    <PreviousGuesses guesses={guesses} answer={answer} setGameResult={setGameResult} gameResult={gameResult} />
+    <GuessForm handleAddGuess={handleAddGuess} isGameFinished={isGameFinished} />
   </>;
 }
 
